@@ -1,4 +1,4 @@
-name: Build and Release
+name: Build
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  build-and-release:
+  build:
     env:
       tools: ${{ github.workspace }}/tools
     runs-on: ubuntu-latest
