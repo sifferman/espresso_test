@@ -1,0 +1,32 @@
+name: Build and Release
+
+on:
+  push:
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    env:
+      tools: ${{ github.workspace }}/tools
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Espresso
+        run: |
+          wget https://users.ece.utexas.edu/~patt/10s.382N/tools/espresso.linux
+          chmod +x espresso.linux
+
+      - name: Download Book Examples
+        run: |
+          wget https://ptolemy.berkeley.edu/projects/embedded/pubs/downloads/espresso/espresso-book-examples.tar.gz
+          tar -xzf espresso-book-examples.tar.gz
+
+      - name: Run Espresso
+        run: |
+          find espresso-book-examples -type f -exec bash -c \
+           'ESPRESSO=./espresso.linux make "${1}.report"' _ {} \;
